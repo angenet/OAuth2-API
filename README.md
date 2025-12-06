@@ -26,7 +26,7 @@
 ### 3. 部署到 Vercel
 - 点击下面的按钮，一键部署到 Vercel
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/HChaoHui/msOauth2api)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/angenet/OAuth2-API/tree/main)
 
 - 在 Vercel 部署页面，填写你的项目名称，然后点击 `Deploy` 按钮
 - 部署完成后访问: `https://mail.150420.xyz` 查看 API 文档
@@ -146,3 +146,4 @@ vercel --prod
 
 **基于原始项目改进，保留原始出处** ❤️  
 **Happy Coding!** 🎉
+
