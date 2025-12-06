@@ -137,13 +137,9 @@ vercel --prod
 ### 支持原始项目
 如果这个项目对你有帮助，请给原始项目一个 Star ⭐️：
 
-[![Star HChaoHui/msOauth2api](https://img.shields.io/github/stars/HChaoHui/msOauth2api?style=social)](https://github.com/HChaoHui/msOauth2api)
-
-### 赞助支持
-![Buy](https://github.com/HChaoHui/msOauth2api/blob/main/img/Buy.JPG?raw=true)
-
 ---
 
 **基于原始项目改进，保留原始出处** ❤️  
 **Happy Coding!** 🎉
+
 
