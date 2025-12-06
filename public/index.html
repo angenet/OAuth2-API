@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MS OAuth2 API 文档</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            margin-bottom: 40px;
+            border-radius: 10px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .api-base {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 1.1em;
+        }
+        
+        .api-base code {
+            background: #fff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #1976d2;
+        }
+        
+        .section {
+            background: white;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .section-header {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .section-title {
+            font-size: 1.5em;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+        
+        .section-description {
+            color: #6c757d;
+            font-size: 1em;
+        }
+        
+        .section-content {
+            padding: 20px;
+        }
+        
+        .endpoint {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .method {
+            display: inline-block;
+            background: #28a745;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .url {
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 1.1em;
+            color: #007bff;
+        }
+        
+        .params-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        .params-table th,
+        .params-table td {
+            border: 1px solid #dee2e6;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .params-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        .params-table .required {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .params-table .optional {
+            color: #6c757d;
+        }
+        
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        
+        .code-block code {
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.9em;
+            color: #495057;
+        }
+        
+        .response-example {
+            background: #e8f5e8;
+            border: 1px solid #c3e6c3;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .response-example h4 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .highlight strong {
+            color: #856404;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #6c757d;
+            border-top: 1px solid #dee2e6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>MS OAuth2 API</h1>
+            <p>微软 OAuth2 邮件 API 文档</p>
+        </div>
+
+        <div class="api-base">
+            <strong>API 基础地址:</strong> 
+            <code>https://mail.150420.xyz</code>
+        </div>
+
+        <div class="highlight">
+            <strong>新功能:</strong> API 现在支持自动提取 6 位数字验证码！所有邮件 API 都会在响应中包含 <code>verification_code</code> 字段。
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">📧 获取最新一封邮件</h2>
+                <p class="section-description">获取指定邮箱文件夹中的最新邮件，自动提取验证码</p>
+            </div>
+            <div class="section-content">
+                <div class="endpoint">
+                    <span class="method">GET</span>
+                    <span class="url">/api/mail-new</span>
+                </div>
+
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>参数名</th>
+                            <th>类型</th>
+                            <th>必需</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>refresh_token</td>
+                            <td>string</td>
+                            <td class="required">是</td>
+                            <td>OAuth2 刷新令牌</td>
+                        </tr>
+                        <tr>
+                            <td>client_id</td>
+                            <td>string</td>
+                            <td class="required">是</td>
+                            <td>微软应用客户端 ID</td>
+                        </tr>
+                        <tr>
+                            <td>email</td>
+                            <td>string</td>
+                            <td class="required">是</td>
+                            <td>邮箱地址</td>
+                        </tr>
+                        <tr>
+                            <td>mailbox</td>
+                            <td>string</td>
+                            <td class="required">是</td>
+                            <td>邮箱文件夹 (INBOX 或 Junk)</td>
+                        </tr>
+                        <tr>
+                            <td>password</td>
+                            <td>string</td>
+                            <td class="optional">否</td>
+                            <td>API 访问密码 (如果设置了环境变量)</td>
+                        </tr>
+                        <tr>
+                            <td>response_type</td>
+                            <td>string</td>
+                            <td class="optional">否</td>
+                            <td>返回格式 (json 或 html，默认 json)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>调用示例:</h4>
+                <div class="code-block">
+                    <code>
+curl "https://mail.150420.xyz/api/mail-new?refresh_token=YOUR_TOKEN&client_id=YOUR_CLIENT_ID&email=your@email.com&mailbox=INBOX&password=YOUR_PASSWORD"
+                    </code>
+                </div>
+
+                <div class="response-example">
+                    <h4>响应示例:</h4>
+                    <pre><code>{
+  "send": "\"KlingAI\" <klingai@user-support.klingai.com>",
+  "subject": "KlingAI Account Verification",
+  "text": "您是KlingAI的验证码...",
+  "html": "&lt;div&gt;验证码: 233645&lt;/div&gt;",
+  "date": "2025-12-01T09:58:25.000Z",
+  "verification_code": "233645"
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">📂 获取全部邮件</h2>
+                <p class="section-description">获取指定邮箱文件夹中的所有邮件</p>
+            </div>
+            <div class="section-content">
+                <div class="endpoint">
+                    <span class="method">GET</span>
+                    <span class="url">/api/mail-all</span>
+                </div>
+
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>参数名</th>
+                            <th>类型</th>
+                            <th>必需</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>refresh_token</td>
+                            <td>string</td>
+                            <td class="required">是</td>
+                            <td>OAuth2 刷新令牌</td>
+                        </tr>
+                        <tr>
+                            <td>client_id</td>
+                            <td>string</td>
+                            <td class="required">是</td>
+                            <td>微软应用客户端 ID</td>
+                        </tr>
+                        <tr>
+                            <td>email</td>
+                            <td>string</td>
+                            <td class="required">是</td>
+                            <td>邮箱地址</td>
+                        </tr>
+                        <tr>
+                            <td>mailbox</td>
+                            <td>string</td>
+                            <td class="required">是</td>
+                            <td>邮箱文件夹 (INBOX 或 Junk)</td>
+                        </tr>
+                        <tr>
+                            <td>password</td>
+                            <td>string</td>
+                            <td class="optional">否</td>
+                            <td>API 访问密码 (如果设置了环境变量)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>调用示例:</h4>
+                <div class="code-block">
+                    <code>
+curl "https://mail.150420.xyz/api/mail-all?refresh_token=YOUR_TOKEN&client_id=YOUR_CLIENT_ID&email=your@email.com&mailbox=INBOX&password=YOUR_PASSWORD"
+                    </code>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">🗑️ 清空收件箱</h2>
+                <p class="section-description">清空指定的收件箱</p>
+            </div>
+            <div class="section-content">
+                <div class="endpoint">
+                    <span class="method">GET</span>
+                    <span class="url">/api/process-inbox</span>
+                </div>
+
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>参数名</th>
+                            <th>类型</th>
+                            <th>必需</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>refresh_token</td>
+                            <td>string</td>
+                            <td class="required">是</td>
+                            <td>OAuth2 刷新令牌</td>
+                        </tr>
+                        <tr>
+                            <td>client_id</td>
+                            <td>string</td>
+                            <td class="required">是</td>
+                            <td>微软应用客户端 ID</td>
+                        </tr>
+                        <tr>
+                            <td>email</td>
+                            <td>string</td>
+                            <td class="required">是</td>
+                            <td>邮箱地址</td>
+                        </tr>
+                        <tr>
+                            <td>password</td>
+                            <td>string</td>
+                            <td class="optional">否</td>
+                            <td>API 访问密码 (如果设置了环境变量)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">🗑️ 清空垃圾箱</h2>
+                <p class="section-description">清空指定的垃圾箱</p>
+            </div>
+            <div class="section-content">
+                <div class="endpoint">
+                    <span class="method">GET</span>
+                    <span class="url">/api/process-junk</span>
+                </div>
+
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>参数名</th>
+                            <th>类型</th>
+                            <th>必需</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>refresh_token</td>
+                            <td>string</td>
+                            <td class="required">是</td>
+                            <td>OAuth2 刷新令牌</td>
+                        </tr>
+                        <tr>
+                            <td>client_id</td>
+                            <td>string</td>
+                            <td class="required">是</td>
+                            <td>微软应用客户端 ID</td>
+                        </tr>
+                        <tr>
+                            <td>email</td>
+                            <td>string</td>
+                            <td class="required">是</td>
+                            <td>邮箱地址</td>
+                        </tr>
+                        <tr>
+                            <td>password</td>
+                            <td>string</td>
+                            <td class="optional">否</td>
+                            <td>API 访问密码 (如果设置了环境变量)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">✉️ 发送邮件</h2>
+                <p class="section-description">使用 OAuth2 发送邮件</p>
+            </div>
+            <div class="section-content">
+                <div class="endpoint">
+                    <span class="method">GET</span>
+                    <span class="url">/api/send-mail</span>
+                </div>
+
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>参数名</th>
+                            <th>类型</th>
+                            <th>必需</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>refresh_token</td>
+                            <td>string</td>
+                            <td class="required">是</td>
+                            <td>OAuth2 刷新令牌</td>
+                        </tr>
+                        <tr>
+                            <td>client_id</td>
+                            <td>string</td>
+                            <td class="required">是</td>
+                            <td>微软应用客户端 ID</td>
+                        </tr>
+                        <tr>
+                            <td>email</td>
+                            <td>string</td>
+                            <td class="required">是</td>
+                            <td>发件人邮箱地址</td>
+                        </tr>
+                        <tr>
+                            <td>to</td>
+                            <td>string</td>
+                            <td class="required">是</td>
+                            <td>收件人邮箱地址</td>
+                        </tr>
+                        <tr>
+                            <td>subject</td>
+                            <td>string</td>
+                            <td class="required">是</td>
+                            <td>邮件主题</td>
+                        </tr>
+                        <tr>
+                            <td>text</td>
+                            <td>string</td>
+                            <td class="optional">否</td>
+                            <td>纯文本内容 (与 html 二选一)</td>
+                        </tr>
+                        <tr>
+                            <td>html</td>
+                            <td>string</td>
+                            <td class="optional">否</td>
+                            <td>HTML 内容 (与 text 二选一)</td>
+                        </tr>
+                        <tr>
+                            <td>send_password</td>
+                            <td>string</td>
+                            <td class="optional">否</td>
+                            <td>发送邮件密码 (如果设置了环境变量)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>调用示例:</h4>
+                <div class="code-block">
+                    <code>
+curl "https://mail.150420.xyz/api/send-mail?refresh_token=YOUR_TOKEN&client_id=YOUR_CLIENT_ID&email=your@email.com&to=target@email.com&subject=测试邮件&text=这是测试内容&send_password=YOUR_PASSWORD"
+                    </code>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">🔧 环境变量配置</h2>
+                <p class="section-description">部署到 Vercel 时需要设置的环境变量</p>
+            </div>
+            <div class="section-content">
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>变量名</th>
+                            <th>说明</th>
+                            <th>示例值</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>PASSWORD</td>
+                            <td>邮件读取 API 访问密码</td>
+                            <td>your_read_password_123</td>
+                        </tr>
+                        <tr>
+                            <td>SEND_PASSWORD</td>
+                            <td>邮件发送 API 访问密码</td>
+                            <td>your_send_password_456</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="highlight">
+                    <strong>注意:</strong> 如果不设置环境变量，API 将在没有密码验证的情况下工作。为了安全起见，建议设置密码保护。
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">📋 响应格式说明</h2>
+                <p class="section-description">API 响应数据格式</p>
+            </div>
+            <div class="section-content">
+                <h4>成功响应:</h4>
+                <div class="response-example">
+                    <pre><code>{
+  "send": "发件人邮箱",
+  "subject": "邮件主题",
+  "text": "纯文本内容",
+  "html": "HTML内容",
+  "date": "2025-12-01T09:58:25.000Z",
+  "verification_code": "123456"  // 如果邮件中包含6位数字验证码
+}</code></pre>
+                </div>
+
+                <h4>错误响应:</h4>
+                <div class="code-block">
+                    <code>
+{
+  "error": "错误描述信息"
+}
+                    </code>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>MS OAuth2 API - 简化微软邮件操作流程</p>
+            <p>如有问题请联系管理员</p>
+        </div>
+    </div>
+</body>
+</html>
